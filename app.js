@@ -1,7 +1,5 @@
 
-
-// Variables
-
+// Variáveis
 const $zipcode = document.querySelector('#zipcode');
 const $output = document.querySelector('#output');
 const msg = {
@@ -9,18 +7,17 @@ const msg = {
   "zipcode_notfound": "O CEP informado não existe!",
   "zipcode_error": "Ocorreu um erro ao realizar a consulta do CEP, tente novamente.",
 };
-
-// Apply mask
+// Aplica a máscara no formato padrão do CEP/BR
 VMasker($zipcode).maskPattern("99999-999");
 
-// Listener for form search
+// Entrada para realizar a busca do cep desejado
 document.querySelector('#search').addEventListener('submit', getZipcode);
 
-// Listen for button close output
+// Saida Quando clicado no botao
 document.querySelector("body").addEventListener("click", closeOutput);
 
 
-// Get Zipcode
+// Obtém o CEP
 function getZipcode(event) {
   event.preventDefault();
 
@@ -33,8 +30,7 @@ function getZipcode(event) {
     throw Error(msg.zipcode_invalid);
   }
 
-
-  // Request zipcode using fetch API
+  // Buscar o CEP usando api de busca do Viacep
   fetch(`https://viacep.com.br/ws/${$zipcode.value}/json/`)
   .then(response => {
 
@@ -63,22 +59,20 @@ function getZipcode(event) {
           <li><strong>Bairro: </strong>${data.bairro}</li>
           <li><strong>Cidade: </strong>${data.localidade}</li>
           <li><strong>Estado: </strong>${data.uf}</li>
-          <li><strong>Nome: </strong>${data.nome}</li>
         </ul>
     `;
+      
       $output.innerHTML = showMessage(message);
-
     }
   })
   .catch(err => console.warn(err));
 }
 
-// Zipcode validation
+// Validação do código do cep
 function zipcodeValidation(value) {
   return /(^[0-9]{5}-[0-9]{3}$|^[0-9]{8}$)/.test(value) ? true : false;
 }
 
-// Close Output Container
 function closeOutput(event) {
   if (event.target.className == 'delete') {
     $output.innerHTML = '';
@@ -87,7 +81,7 @@ function closeOutput(event) {
   }
 }
 
-// Loading
+// Carregando do dados
 function loading(status) {
   let is_invisible = (status == 'on') ? '' : 'is-invisible';
   $output.innerHTML = `
@@ -97,7 +91,7 @@ function loading(status) {
   `;
 }
 
-// Show Message on Error, Success or Warning alert
+// Função para mostrar mensagem no alerta de erro, sucesso ou aviso
 function showMessage (message, typeMessage = "") {
   return `
     <article class="message ${typeMessage}">
@@ -108,4 +102,16 @@ function showMessage (message, typeMessage = "") {
       <div class="message-body">${message}</div>
     </article>
   `;
+
 }
+function salvarForm(){      
+
+  if(localStorage.cont) {
+     localStorage.cont = Number(localStorage.cont)+1
+  } else {
+     localStorage.cont = 1
+  }       
+  cad = document.getElementById('nome').value + ';' + document.getElementById('cpf').value + ';' 
+  + document.getElementById('cnpj').value + ';' + document.getElementById('zipcode').value + ';' +document.getElementById('zipcode').values;
+  localStorage.setItem("cad_"+localStorage.cont,cad);
+ }
